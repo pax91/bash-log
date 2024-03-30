@@ -46,8 +46,3 @@ Set the script for global use Import (Update if Exists)
 ```
 mkdir -p ~/.local/bash-log && wget -N -O ~/.local/bash-log/log.sh https://raw.githubusercontent.com/pax91/bash-log/main/log.sh && chmod +x ~/.local/bash-log/log.sh
 ```
-And add to your bash file with source command
-```bash
-#!/bin/bash
-source ~/.local/bash-log/log.sh
-```
