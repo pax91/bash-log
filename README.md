@@ -2,20 +2,24 @@
 ## © made by PAX - Luca Passoni
 
 ### Description
+This script allow you to call the log function to print coloured output to your bash script into terminal.
 Import as source the log.sh file into your script.
-Call the log function with the following params accepted (uppercase or lowercase) no order required.
-You can pass more strings to be printed as rows.
+Call the log function with the accepted params, no order required.
+You can pass more strings to be printed as rows. See Example below.
 ```bash
 #!/bin/bash
-source log.sh
+source ~/.local/bash-log/log.sh
 
 LN="####################################"
 log red blinking "Hello World"
-log cyan bold "$LN" "    HELLO WORLD   " "$LN"
-log "CIAO"
-log YELLOW "PAX"
+log cyan bold "$LN" "            HELLO WORLD" "$LN"
+log 
+log inline "CIAO" " "
+log YELLOW inline "PAX"
+log
 ```
-### 
+### Allowed Params
+- inline (Print Strings inline with echo -ne option)
 ### Allowed Colors (uppercase or lowercase)
 - black
 - red
@@ -36,11 +40,11 @@ log YELLOW "PAX"
 ### Installation
 Download the script
 ```
-wget -O log.sh https://raw.githubusercontent.com/pax91/bash-log/main/log.sh
+wget -N -O log.sh https://raw.githubusercontent.com/pax91/bash-log/main/log.sh
 ```
 Set the script for global use
 ```
-mkdir -p ~/.local/bash-log && cd ~/.local/bash-log && wget -O log.sh https://raw.githubusercontent.com/pax91/bash-log/main/log.sh && chmod +x log.sh
+mkdir -p ~/.local/bash-log && cd ~/.local/bash-log && wget -N -O log.sh https://raw.githubusercontent.com/pax91/bash-log/main/log.sh && chmod +x log.sh
 ```
 And add to your bash file with source command
 ```bash

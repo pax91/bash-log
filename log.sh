@@ -1,26 +1,27 @@
 #!/bin/bash
 
-INI="\033"
-RST="$INI[0m"
-
-regular="0"
-bold="1"
-lowintensity="2"
-underline="4"
-blinking="5"
-reverse="7"
-invisible="8"
-
-black="30m"
-red="31m"
-green="32m"
-yellow="33m"
-blue="34m"
-purple="35m"
-cyan="36m"
-white="37m"
-
 log() {
+    # Special Codes
+    local INI="\033"
+    local RST="$INI[0m"
+    # Mode Codes
+    local regular="0"
+    local bold="1"
+    local lowintensity="2"
+    local underline="4"
+    local blinking="5"
+    local reverse="7"
+    local invisible="8"
+    # Color Codes
+    local black="30m"
+    local red="31m"
+    local green="32m"
+    local yellow="33m"
+    local blue="34m"
+    local purple="35m"
+    local cyan="36m"
+    local white="37m"
+    # Function Variables
     local arr=("$@")
     local lines=()
     local color="0m"
@@ -87,7 +88,7 @@ log() {
             if [ $inline -eq 0 ]; then
                 echo -e "${CLR}$line${RST}"
             else
-                echo -ne "${CLR}$line${RST}"
+                echo -ne "${CLR}$line${RST} "
             fi
         done
     else
