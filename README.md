@@ -16,7 +16,7 @@ log cyan bold "$LN" "            HELLO WORLD" "$LN"
 log 
 log inline "CIAO" " "
 log YELLOW inline "PAX"
-log
+log cyan bold "$LN"
 ```
 ### Allowed Params
 - inline (Print Strings inline with echo -ne option)
