@@ -78,7 +78,7 @@ log() {
         esac
     done
     local CLR="$INI[$mode;$color"
-    if [ "${lines[@]}" ]; then 
+    if [[ "${lines[@]}" ]]; then 
         for line in "${lines[@]}"; do
             echo -e "${CLR}$line${RST}"
         done
