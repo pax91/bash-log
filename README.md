@@ -24,3 +24,13 @@ log cyan bold "Hello World"
 - blinking
 - reverse
 - invisible
+### Installation
+Download the script
+```
+wget -O log.sh https://raw.githubusercontent.com/pax91/bash-log/main/log.sh && chmod +x log.sh
+```
+And add to your bash file with source command
+```bash
+#!/bin/bash
+source log.sh
+```
