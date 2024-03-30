@@ -131,3 +131,12 @@ logError() {
     log red blinking inline "-> ERROR:"
     log red bold "$1"
 }
+
+printOptions() {
+    local arr=("$@")
+    local i=0
+    for opt in "${arr[@]}"; do
+        echo -e " ${BOLD_CYAN}$i)${BOLD_WHITE} $opt${LOG_RST}"  
+        ((i+=1))
+    done
+}
