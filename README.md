@@ -99,6 +99,15 @@ BLINK_WHITE="$LOG_INI[$LOG_BLINKING;$LOG_WHITE"
 ```
 You can use them into your script, for Example:
 ```bash
+#!/bin/bash
+if [ -f ~/.local/bash-log/log.sh ]; then
+    source ~/.local/bash-log/log.sh
+else
+    echo "ERROR: Missign bash-log source"
+    echo "See: https://github.com/pax91/bash-log"
+    exit 1
+fi
+
 printOptions() {
     local arr=("$@")
     local i=0
