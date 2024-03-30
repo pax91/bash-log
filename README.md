@@ -4,10 +4,18 @@
 ### Description
 Import as source the log.sh file into your script.
 Call the log function with the following params accepted (uppercase or lowercase) no order required.
+You can pass more strings to be printed as rows.
 ```bash
-log cyan bold "Hello World"
+#!/bin/bash
+source log.sh
+
+LN="####################################"
+log red blinking "Hello World"
+log cyan bold "$LN" "    HELLO WORLD   " "$LN"
+log "CIAO"
+log YELLOW "PAX"
 ```
-### Allowed Colors
+### Allowed Colors (uppercase or lowercase)
 - black
 - red
 - green
@@ -16,8 +24,8 @@ log cyan bold "Hello World"
 - purple
 - cyan
 - white
-### Allowed Modes
-- regular
+### Allowed Modes (uppercase or lowercase)
+- regular (Default)
 - bold
 - lowintensity
 - underline
