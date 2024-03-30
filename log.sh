@@ -25,8 +25,12 @@ log() {
     local lines=()
     local color="0m"
     local mode=$regular
+    local inline=0
     for opt in "${arr[@]}"; do
         case $opt in
+            "inline" | "INLINE")
+                inline=1
+                ;;
             "BLACK" | "black") 
                 color=$black
                 ;;
@@ -80,9 +84,17 @@ log() {
     local CLR="$INI[$mode;$color"
     if [[ "${lines[@]}" ]]; then 
         for line in "${lines[@]}"; do
-            echo -e "${CLR}$line${RST}"
+            if [ $inline -eq 0 ]; then
+                echo -e "${CLR}$line${RST}"
+            else
+                echo -ne "${CLR}$line${RST}"
+            fi
         done
     else
-        echo -e "${CLR} ${RST}"
+        if [ $inline -eq 0 ]; then
+            echo -e "${CLR}${RST}"
+        else
+            echo -ne "${CLR} ${RST}"
+        fi
     fi
 }

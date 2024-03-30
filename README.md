@@ -15,6 +15,7 @@ log cyan bold "$LN" "    HELLO WORLD   " "$LN"
 log "CIAO"
 log YELLOW "PAX"
 ```
+### 
 ### Allowed Colors (uppercase or lowercase)
 - black
 - red
@@ -35,10 +36,14 @@ log YELLOW "PAX"
 ### Installation
 Download the script
 ```
-wget -O log.sh https://raw.githubusercontent.com/pax91/bash-log/main/log.sh && chmod +x log.sh
+wget -O log.sh https://raw.githubusercontent.com/pax91/bash-log/main/log.sh
+```
+Set the script for global use
+```
+mkdir -p ~/.local/bash-log && cd ~/.local/bash-log && wget -O log.sh https://raw.githubusercontent.com/pax91/bash-log/main/log.sh && chmod +x log.sh
 ```
 And add to your bash file with source command
 ```bash
 #!/bin/bash
-source log.sh
+source ~/.local/bash-log/log.sh
 ```
