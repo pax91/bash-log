@@ -165,6 +165,55 @@ getColor() {
     esac
 }
 
+getMode() {
+    local str="$1"
+    case $str in
+        "REGULAR" | "regular") 
+            echo $LOG_REGULAR
+            ;;
+        "BOLD" | "bold") 
+            echo $LOG_BOLD
+            ;;
+        "LOWINTENSITY" | "lowintensity") 
+            echo $LOG_LOWINTENSITY 
+            ;;
+        "UNDERLINE" | "underline") 
+            echo $LOG_UNDERLINE
+            ;;
+        "BLINKING" | "blinking") 
+            echo $LOG_BLINKING
+            ;;
+        "REVERSE" | "reverse") 
+            echo $LOG_REVERSE
+            ;;
+        "INVISIBLE" | "invisible") 
+            echo $LOG_INVISIBLE
+            ;;
+        *) 
+            echo ""
+            ;;
+    esac 
+}
+
+colorCode() {
+    local opts=("$@")
+    local mode=$LOG_REGULAR
+    local color="0m"
+    for opt in "${opts[@]}"; do
+        local is_color="$(getColor $opt)"
+        if [ ! -z "$is_color" ]; then
+            color="$is_color"
+        else
+            local is_mode="$(getMode $opt)"
+            if [ ! -z "$is_mode" ]; then
+                mode="$is_mode"
+            fi
+        fi
+    done
+    local CLR="$LOG_INI[$mode;$color"
+    echo $CLR
+}
+
 printMenu() {   
     local opts=("$@")
     local mode=$LOG_BOLD
@@ -202,5 +251,4 @@ printMenu() {
             ((length++))
         done        
     fi
-
 }

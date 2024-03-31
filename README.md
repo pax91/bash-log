@@ -8,7 +8,7 @@ wget -O log.sh https://raw.githubusercontent.com/pax91/bash-log/main/log.sh
 ```
 Set the script for global use Import (Update if Exists)
 ```bash
-mkdir -p ~/.local/bash-log && wget -O ~/.local/bash-log/log.sh https://raw.githubusercontent.com/pax91/bash-log/main/log.sh && chmod +x ~/.local/bash-log/log.sh
+mkdir -p ~/.local/bash-log && rm ~/.local/bash-log/log.sh && wget -O ~/.local/bash-log/log.sh https://raw.githubusercontent.com/pax91/bash-log/main/log.sh && chmod +x ~/.local/bash-log/log.sh
 ```
 ### Description
 This script allow you to call the log function to print coloured output to your bash script into terminal.
