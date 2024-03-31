@@ -17,7 +17,7 @@ isNumber() {
 }
 
 isLogColor() {
-    if [[ $(echo ${LOG_COLORS[@]} | fgrep -w $1) ]]; then
+    if [[ $(echo "${LOG_COLORS[@]}" | fgrep -w "$1") ]]; then
         return 1
     else
         return 0
@@ -25,7 +25,7 @@ isLogColor() {
 }
 
 isLogMode() {
-    if [[ $(echo ${LOG_MODES[@]} | fgrep -w $1) ]]; then
+    if [[ $(echo "${LOG_MODES[@]}" | fgrep -w "$1") ]]; then
         return 1
     else
         return 0
@@ -37,7 +37,7 @@ indexOf() {
     local search="$1"
     shift
     local arr=("$@")
-    if [[ $(echo ${arr[@]} | fgrep -w $search) ]]; then
+    if [[ $(echo "${arr[@]}" | fgrep -w "$search") ]]; then
         local i=0
         for el in "${arr[@]}"; do
             if [[ "$el" == "$search" ]]; then
