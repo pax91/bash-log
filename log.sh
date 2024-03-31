@@ -4,118 +4,113 @@
 LOG_INI="\033"
 LOG_RST="$LOG_INI[0m"
 # Modes Presets
-LOG_REGULAR="0"
-LOG_BOLD="1"
-LOG_LOWINTENSITY="2"
-LOG_UNDERLINE="4"
-LOG_BLINKING="5"
-LOG_REVERSE="7"
-LOG_INVISIBLE="8"
+LOG_MODES=("regular" "bold" "lowintensity" "italic" "underline" "blink" "blinking" "reverse" "invisible")
 # Colors Presets
-LOG_BLACK="30m"
-LOG_RED="31m"
-LOG_GREEN="32m"
-LOG_YELLOW="33m"
-LOG_BLUE="34m"
-LOG_PURPLE="35m"
-LOG_CYAN="36m"
-LOG_WHITE="37m"
-# Regular Colors Presets
-REGULAR_BLACK="$LOG_INI[$LOG_BLACK"
-REGULAR_RED="$LOG_INI[$LOG_RED"
-REGULAR_GREEN="$LOG_INI[$LOG_GREEN"
-REGULAR_YELLOW="$LOG_INI[$LOG_YELLOW"
-REGULAR_BLUE="$LOG_INI[$LOG_BLUE"
-REGULAR_PURPLE="$LOG_INI[$LOG_PURPLE"
-REGULAR_CYAN="$LOG_INI[$LOG_CYAN"
-REGULAR_WHITE="$LOG_INI[$LOG_WHITE"
-# Bold Color Presets
-BOLD_BLACK="$LOG_INI[$LOG_BOLD;$LOG_BLACK"
-BOLD_RED="$LOG_INI[$LOG_BOLD;$LOG_RED"
-BOLD_GREEN="$LOG_INI[$LOG_BOLD;$LOG_GREEN"
-BOLD_YELLOW="$LOG_INI[$LOG_BOLD;$LOG_YELLOW"
-BOLD_BLUE="$LOG_INI[$LOG_BOLD;$LOG_BLUE"
-BOLD_PURPLE="$LOG_INI[$LOG_BOLD;$LOG_PURPLE"
-BOLD_CYAN="$LOG_INI[$LOG_BOLD;$LOG_CYAN"
-BOLD_WHITE="$LOG_INI[$LOG_BOLD;$LOG_WHITE"
-# Blinking Colors Presets
-BLINK_BLACK="$LOG_INI[$LOG_BLINKING;$LOG_BLACK"
-BLINK_RED="$LOG_INI[$LOG_BLINKING;$LOG_RED"
-BLINK_GREEN="$LOG_INI[$LOG_BLINKING;$LOG_GREEN"
-BLINK_YELLOW="$LOG_INI[$LOG_BLINKING;$LOG_YELLOW"
-BLINK_BLUE="$LOG_INI[$LOG_BLINKING;$LOG_BLUE"
-BLINK_PURPLE="$LOG_INI[$LOG_BLINKING;$LOG_PURPLE"
-BLINK_CYAN="$LOG_INI[$LOG_BLINKING;$LOG_CYAN"
-BLINK_WHITE="$LOG_INI[$LOG_BLINKING;$LOG_WHITE"
+LOG_COLORS=("black" "red" "green" "yellow" "blue" "purple" "cyan" "white")
+
+isNumber() {
+    if [[ $1 =~ ^-?[0-9]+$ ]]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+isLogColor() {
+    if [[ $(echo ${LOG_COLORS[@]} | fgrep -w $1) ]]; then
+        return 1
+    else
+        return 0
+    fi
+}
+
+isLogMode() {
+    if [[ $(echo ${LOG_MODES[@]} | fgrep -w $1) ]]; then
+        return 1
+    else
+        return 0
+    fi
+}
+
+indexOf() {
+    local index=-1
+    local search="$1"
+    shift
+    local arr=("$@")
+    if [[ $(echo ${arr[@]} | fgrep -w $search) ]]; then
+        local i=0
+        for el in "${arr[@]}"; do
+            if [[ "$el" == "$search" ]]; then
+                index=$i
+                break
+            else
+                ((i++))
+            fi
+        done
+    fi
+    echo $index
+}
+
+colorCode() {
+    local args=("$@")
+    local MODE="0"
+    local COLOR="0m"
+    for arg in "${args[@]}"; do
+        if (isLogColor "$arg"); then
+            local color_index=$(indexOf "$arg" "${LOG_COLORS[@]}")
+            if [ $color_index -gt -1 ]; then
+                COLOR="3${color_index}m"
+            fi
+        elif (isLogCode "$arg"); then
+            local mode_index=$(indexOf "$arg" "${LOG_MODES[@]}")
+            if [ $mode_index -gt -1 ]; then
+                MODE="$mode_index"
+            fi
+        fi
+    done
+    echo "$LOG_INI[$MODE;$COLOR"
+}
 
 log() {
-    local arr=("$@")
-    local lines=()
-    local color="0m"
-    local mode=$LOG_REGULAR
+    local args=("$@")
+    local LINES=()
+    local COLOR=""
+    local MODE="regular"
     local inline=0
-    for opt in "${arr[@]}"; do
-        case $opt in
-            "inline" | "INLINE")
-                inline=1
-                ;;
-            "BLACK" | "black") 
-                color=$LOG_BLACK
-                ;;
-            "RED" | "red") 
-                color=$LOG_RED
-                ;;
-            "GREEN" | "green") 
-                color=$LOG_GREEN
-                ;;
-            "YELLOW" | "yellow") 
-                color=$LOG_YELLOW  
-                ;;
-            "BLUE" | "blue") 
-                color=$LOG_BLUE
-                ;;
-            "PURPLE" | "purple")
-                color=$LOG_PURPLE
-                ;;
-            "CYAN" | "cyan")
-                color=$LOG_CYAN
-                ;;
-            "WHITE" | "white") 
-                color=$LOG_WHITE
-                ;;
-            "REGULAR" | "regular") 
-                mode=$LOG_REGULAR
-                ;;
-            "BOLD" | "bold") 
-                mode=$LOG_BOLD
-                ;;
-            "LOWINTENSITY" | "lowintensity") 
-                mode=$LOG_LOWINTENSITY 
-                ;;
-            "UNDERLINE" | "underline") 
-                mode=$LOG_UNDERLINE
-                ;;
-            "BLINKING" | "blinking") 
-                mode=$LOG_BLINKING
-                ;;
-            "REVERSE" | "reverse") 
-                mode=$LOG_REVERSE
-                ;;
-            "INVISIBLE" | "invisible") 
-                mode=$LOG_INVISIBLE
-                ;;
-            *) 
-                lines+=("$opt")
-                ;;
-        esac
+    local center=0
+    local COLS=$(tput cols)
+    for arg in "${args[@]}"; do
+        if [[ "$arg" == "center" ]]; then
+            center=1
+        elif [[ "$arg" == "inline" ]]; then
+            inline=1
+        elif (isLogColor "$arg"); then
+            COLOR="$arg"
+        elif (isLogMode "$arg"); then            
+            MODE="$arg"
+        else
+            LINES+=("$arg")
+        fi
     done
-    local CLR="$LOG_INI[$mode;$color"
-    if [[ "${lines[@]}" ]]; then 
-        for line in "${lines[@]}"; do
+    local CLR="$(colorCode $COLOR $MODE)"    
+    if [[ "${LINES[@]}" ]]; then 
+        for line in "${LINES[@]}"; do
+            local STR=""
+            if [ $center -eq 1 ]; then                
+                local n=${#line}
+                if [ $COLS -gt $n ]; then
+                    local diff=$(($COLS - $n))
+                    local spaces=$(($diff / 2))   
+                    for ((i=0; i<$spaces; i++)); do
+                        STR="$STR "
+                    done
+                fi
+            fi
+            STR="$STR$line"               
             if [ $inline -eq 0 ]; then
-                echo -e "${CLR}$line${LOG_RST}"
+                echo -e "${CLR}$STR${LOG_RST}"
             else
-                echo -ne "${CLR}$line${LOG_RST} "
+                echo -ne "${CLR}$STR${LOG_RST} "
             fi
         done
     else
@@ -127,123 +122,56 @@ log() {
     fi
 }
 
-logError() {
-    log red blinking inline "-> ERROR:"
-    log red bold "$1"
-}
-
-getColor() {
-    local str="$1"
-    case $str in
-        "BLACK" | "black") 
-            echo $LOG_BLACK
-            ;;
-        "RED" | "red") 
-            echo $LOG_RED
-            ;;
-        "GREEN" | "green") 
-            echo $LOG_GREEN
-            ;;
-        "YELLOW" | "yellow") 
-            echo $LOG_YELLOW  
-            ;;
-        "BLUE" | "blue") 
-            echo $LOG_BLUE
-            ;;
-        "PURPLE" | "purple")
-            echo $LOG_PURPLE
-            ;;
-        "CYAN" | "cyan")
-            echo $LOG_CYAN
-            ;;
-        "WHITE" | "white") 
-            echo $LOG_WHITE
-            ;;
-        *) 
-            echo ""
-            ;;
-    esac
-}
-
-getMode() {
-    local str="$1"
-    case $str in
-        "REGULAR" | "regular") 
-            echo $LOG_REGULAR
-            ;;
-        "BOLD" | "bold") 
-            echo $LOG_BOLD
-            ;;
-        "LOWINTENSITY" | "lowintensity") 
-            echo $LOG_LOWINTENSITY 
-            ;;
-        "UNDERLINE" | "underline") 
-            echo $LOG_UNDERLINE
-            ;;
-        "BLINKING" | "blinking") 
-            echo $LOG_BLINKING
-            ;;
-        "REVERSE" | "reverse") 
-            echo $LOG_REVERSE
-            ;;
-        "INVISIBLE" | "invisible") 
-            echo $LOG_INVISIBLE
-            ;;
-        *) 
-            echo ""
-            ;;
-    esac 
-}
-
-colorCode() {
-    local opts=("$@")
-    local mode=$LOG_REGULAR
-    local color="0m"
-    for opt in "${opts[@]}"; do
-        local is_color="$(getColor $opt)"
-        if [ ! -z "$is_color" ]; then
-            color="$is_color"
-        else
-            local is_mode="$(getMode $opt)"
-            if [ ! -z "$is_mode" ]; then
-                mode="$is_mode"
+printLine() {
+    local args=("$@")
+    local COLOR=""
+    local MODE="regular"
+    local CHAR="#"
+    local COLS=$(tput cols)
+    if [[ "${args[@]}" ]]; then
+        for arg in "${args[@]}"; do
+            if (isNumber $arg); then
+                COLS=$arg
+            elif (isLogColor "$arg"); then
+                COLOR="$arg"
+            elif (isLogMode "$arg"); then
+                MODE="$arg"                
+            elif [ ! -z "$arg" ]; then
+                CHAR="$arg"
             fi
-        fi
+        done
+    fi   
+    local CLR="$(colorCode $COLOR $MODE)"
+    local STR=""
+    for ((i=0; i<$COLS; i++)); do
+        STR="$STR$CHAR" 
     done
-    local CLR="$LOG_INI[$mode;$color"
-    echo $CLR
+    log $COLOR $MODE center "$STR"
 }
 
 printMenu() {   
-    local opts=("$@")
-    local mode=$LOG_BOLD
-    local color_option=""
-    local color_name=""
+    local args=("$@")
+    local MODE="bold"
+    local CLR_OPTION=""
+    local CLR_DESCR=""
     local OPTIONS=()
-    for opt in "${opts[@]}"; do
-        local is_color="$(getColor $opt)"
-        if [ ! -z "$is_color" ]; then
-            if [ -z "$color_option" ]; then
-                color_option="$is_color"
+    for arg in "${args[@]}"; do
+        if (isLogColor "$arg"); then
+            if [ -z "$CLR_OPTION" ]; then
+                CLR_OPTION="$arg"
+            elif [ -z "$CLR_DESCR" ]; then
+                CLR_DESCR="$arg"
             else
-                if [ -z "$color_name" ]; then
-                    color_name="$is_color"
-                else
-                    OPTIONS+=("$opt")
-                fi
+                OPTIONS+=("$arg")
             fi
+        elif (isLogMode "$arg"); then
+            MODE="$arg"        
         else
-            OPTIONS+=("$opt")
+            OPTIONS+=("$arg")
         fi
     done
-    if [ -z "$color_option" ]; then
-        color_option=$LOG_CYAN;
-    fi
-    if [ -z "$color_name" ]; then
-        color_name=$LOG_WHITE
-    fi
-    local CLR_OPT="$LOG_INI[$mode;$color_option"
-    local CLR_NAM="$LOG_INI[$mode;$color_name"
+    local CLR_OPT="$(colorCode $CLR_OPTION $MODE)"
+    local CLR_NAM="$(colorCode $CLR_DESCR $MODE)"
     if [[ "${OPTIONS[@]}" ]]; then
         local length=0
         for option in "${OPTIONS[@]}"; do

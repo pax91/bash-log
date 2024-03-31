@@ -28,12 +28,18 @@ log YELLOW inline "PAX"
 log cyan bold "$LN"
 ```
 ### Exported Functions
+- isNumber
+- isLogMode
+- isLogColor
+- indexOf
+- colorCode
 - log
-- logError
+- printLine
 - printMenu
-### Allowed Params
+### Allowed Params (lowercase)
 - inline (Print Strings inline with echo -ne option)
-### Allowed Colors (uppercase or lowercase)
+- center (Print Strings centered the window)
+### Allowed Colors (lowercase)
 - black
 - red
 - green
@@ -42,75 +48,13 @@ log cyan bold "$LN"
 - purple
 - cyan
 - white
-### Allowed Modes (uppercase or lowercase)
+### Allowed Modes (lowercase)
 - regular (Default)
 - bold
 - lowintensity
+- italic
 - underline
+- blink
 - blinking
 - reverse
 - invisible
-### Exported Variables Presets
-The script will declare these globals variables
-```bash
-# Special Codes Presets
-LOG_INI="\033"
-LOG_RST="$LOG_INI[0m"
-# Modes Presets
-LOG_REGULAR="0"
-LOG_BOLD="1"
-LOG_LOWINTENSITY="2"
-LOG_UNDERLINE="4"
-LOG_BLINKING="5"
-LOG_REVERSE="7"
-LOG_INVISIBLE="8"
-# Colors Presets
-LOG_BLACK="30m"
-LOG_RED="31m"
-LOG_GREEN="32m"
-LOG_YELLOW="33m"
-LOG_BLUE="34m"
-LOG_PURPLE="35m"
-LOG_CYAN="36m"
-LOG_WHITE="37m"
-# Regular Colors Presets
-REGULAR_BLACK="$LOG_INI[$LOG_BLACK"
-REGULAR_RED="$LOG_INI[$LOG_RED"
-REGULAR_GREEN="$LOG_INI[$LOG_GREEN"
-REGULAR_YELLOW="$LOG_INI[$LOG_YELLOW"
-REGULAR_BLUE="$LOG_INI[$LOG_BLUE"
-REGULAR_PURPLE="$LOG_INI[$LOG_PURPLE"
-REGULAR_CYAN="$LOG_INI[$LOG_CYAN"
-REGULAR_WHITE="$LOG_INI[$LOG_WHITE"
-# Bold Color Presets
-BOLD_BLACK="$LOG_INI[$LOG_BOLD;$LOG_BLACK"
-BOLD_RED="$LOG_INI[$LOG_BOLD;$LOG_RED"
-BOLD_GREEN="$LOG_INI[$LOG_BOLD;$LOG_GREEN"
-BOLD_YELLOW="$LOG_INI[$LOG_BOLD;$LOG_YELLOW"
-BOLD_BLUE="$LOG_INI[$LOG_BOLD;$LOG_BLUE"
-BOLD_PURPLE="$LOG_INI[$LOG_BOLD;$LOG_PURPLE"
-BOLD_CYAN="$LOG_INI[$LOG_BOLD;$LOG_CYAN"
-BOLD_WHITE="$LOG_INI[$LOG_BOLD;$LOG_WHITE"
-# Blinking Colors Presets
-BLINK_BLACK="$LOG_INI[$LOG_BLINKING;$LOG_BLACK"
-BLINK_RED="$LOG_INI[$LOG_BLINKING;$LOG_RED"
-BLINK_GREEN="$LOG_INI[$LOG_BLINKING;$LOG_GREEN"
-BLINK_YELLOW="$LOG_INI[$LOG_BLINKING;$LOG_YELLOW"
-BLINK_BLUE="$LOG_INI[$LOG_BLINKING;$LOG_BLUE"
-BLINK_PURPLE="$LOG_INI[$LOG_BLINKING;$LOG_PURPLE"
-BLINK_CYAN="$LOG_INI[$LOG_BLINKING;$LOG_CYAN"
-BLINK_WHITE="$LOG_INI[$LOG_BLINKING;$LOG_WHITE"
-```
-You can use them into your script, for Example:
-```bash
-#!/bin/bash
-if [ -f ~/.local/bash-log/log.sh ]; then
-    source ~/.local/bash-log/log.sh
-else
-    echo "ERROR: Missign bash-log source"
-    echo "See: https://github.com/pax91/bash-log"
-    exit 1
-fi
-
-echo -e " ${BOLD_CYAN}$i)${BOLD_WHITE} $opt${LOG_RST}"  
-```
