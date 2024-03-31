@@ -27,6 +27,10 @@ log inline "CIAO" " "
 log YELLOW inline "PAX"
 log cyan bold "$LN"
 ```
+### Exported Functions
+- log
+- logError
+- printMenu
 ### Allowed Params
 - inline (Print Strings inline with echo -ne option)
 ### Allowed Colors (uppercase or lowercase)
@@ -108,12 +112,5 @@ else
     exit 1
 fi
 
-printOptions() {
-    local arr=("$@")
-    local i=0
-    for opt in "${arr[@]}"; do
-        echo -e " ${BOLD_CYAN}$i)${BOLD_WHITE} $opt${LOG_RST}"  
-        ((i+=1))
-    done
-}
+echo -e " ${BOLD_CYAN}$i)${BOLD_WHITE} $opt${LOG_RST}"  
 ```

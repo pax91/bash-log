@@ -132,11 +132,75 @@ logError() {
     log red bold "$1"
 }
 
-printOptions() {
-    local arr=("$@")
-    local i=0
-    for opt in "${arr[@]}"; do
-        echo -e " ${BOLD_CYAN}$i)${BOLD_WHITE} $opt${LOG_RST}"  
-        ((i+=1))
+getColor() {
+    local str="$1"
+    case $str in
+        "BLACK" | "black") 
+            return $LOG_BLACK
+            ;;
+        "RED" | "red") 
+            return $LOG_RED
+            ;;
+        "GREEN" | "green") 
+            return $LOG_GREEN
+            ;;
+        "YELLOW" | "yellow") 
+            return $LOG_YELLOW  
+            ;;
+        "BLUE" | "blue") 
+            return $LOG_BLUE
+            ;;
+        "PURPLE" | "purple")
+            return $LOG_PURPLE
+            ;;
+        "CYAN" | "cyan")
+            return $LOG_CYAN
+            ;;
+        "WHITE" | "white") 
+            return $LOG_WHITE
+            ;;
+        *) 
+            return ""
+            ;;
+    esac
+}
+
+printMenu() {   
+    local opts=("$@")
+    local mode=$LOG_BOLD
+    local color_option=""
+    local color_name=""
+    local OPTIONS=()
+    for opt in "${opts[@]}"; do
+        local is_color="$(getColor $opt)"
+        if [ ! -z "$is_color" ]; then
+            if [ -z "$color_option" ]; then
+                color_option="$is_color"
+            else
+                if [ -z "$color_name" ]; then
+                    color_name="$is_color"
+                else
+                    OPTIONS+=("$opt")
+                fi
+            fi
+        else
+            OPTIONS+=("$opt")
+        fi
     done
+    if [ -z "$color_option" ]; then
+        color_option=$LOG_CYAN;
+    fi
+    if [ -z "$color_name" ]; then
+        color_name=$LOG_WHITE
+    fi
+    local CLR_OPT="$LOG_INI[$mode;$color_option"
+    local CLR_NAM="$LOG_INI[$mode;$color_name"
+    if [[ "${OPTIONS[@]}" ]]; then
+        local length=0
+        for option in "${OPTIONS[@]}"; do
+            echo -e " ${CLR_OPT}$length)${CLR_NAM} $option${LOG_RST}"  
+            ((length++))
+        done        
+    fi
+
 }
