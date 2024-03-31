@@ -61,7 +61,7 @@ colorCode() {
             if [ $color_index -gt -1 ]; then
                 COLOR="3${color_index}m"
             fi
-        elif (isLogCode "$arg"); then
+        elif (isLogMode "$arg"); then
             local mode_index=$(indexOf "$arg" "${LOG_MODES[@]}")
             if [ $mode_index -gt -1 ]; then
                 MODE="$mode_index"
