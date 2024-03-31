@@ -136,31 +136,31 @@ getColor() {
     local str="$1"
     case $str in
         "BLACK" | "black") 
-            return $LOG_BLACK
+            echo $LOG_BLACK
             ;;
         "RED" | "red") 
-            return $LOG_RED
+            echo $LOG_RED
             ;;
         "GREEN" | "green") 
-            return $LOG_GREEN
+            echo $LOG_GREEN
             ;;
         "YELLOW" | "yellow") 
-            return $LOG_YELLOW  
+            echo $LOG_YELLOW  
             ;;
         "BLUE" | "blue") 
-            return $LOG_BLUE
+            echo $LOG_BLUE
             ;;
         "PURPLE" | "purple")
-            return $LOG_PURPLE
+            echo $LOG_PURPLE
             ;;
         "CYAN" | "cyan")
-            return $LOG_CYAN
+            echo $LOG_CYAN
             ;;
         "WHITE" | "white") 
-            return $LOG_WHITE
+            echo $LOG_WHITE
             ;;
         *) 
-            return ""
+            echo ""
             ;;
     esac
 }
